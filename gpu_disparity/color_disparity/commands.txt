@@ -1,0 +1,2 @@
+mogrify -equalize disparity.png
+convert disparity.png colors.png -fx "v.p{0,u*v.h}" test.png
