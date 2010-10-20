@@ -1,4 +1,5 @@
 #include "censuscorrelation.h"
+#include "now.h"
 
 CensusCorrelation::CensusCorrelation(int transformRadius, int correlationRadius)
 {
@@ -8,12 +9,23 @@ CensusCorrelation::CensusCorrelation(int transformRadius, int correlationRadius)
 
 void CensusCorrelation::transform(QImage leftImage, QImage rightImage)
 {
-	left.transform(leftImage, transformRadius);
-	right.transform(rightImage, transformRadius);
+	uint64_t start= Now::now();
+
+	#pragma omp parallel sections
+	{
+		#pragma omp section
+		left.transform(leftImage, transformRadius);
+
+		#pragma omp section
+		right.transform(rightImage, transformRadius);
+	}
+
+	qDebug() << "CensusCorrelation::transform: Transformed both images in"
+			<< (Now::now()-start)/1000 << "ms.";
 }
 
 uint CensusCorrelation::cost(int x1, int x2, int y)
-{	
+{
 	uint cost= 0;
 
 	for(int dy= -correlationRadius; dy <= correlationRadius; dy++) {
