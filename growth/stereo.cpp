@@ -192,7 +192,8 @@ QImage StereoMatching::disparityImage(bool with_background)
 void StereoMatching::loadSeeds()
 {
   QFile fseeds(mNameSeeds);
-  Q_ASSERT(fseeds.open(QIODevice::ReadOnly));
+  bool res = fseeds.open(QIODevice::ReadOnly);
+  Q_ASSERT(res);
 
   // add seeds
   for (;;)
