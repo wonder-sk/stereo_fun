@@ -3,20 +3,31 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = 
+TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
 
+LIBS += -lcv -lhighgui
+
 # Input
 SOURCES += censusimage.cpp \
-    censuscorrelation.cpp \
-    stereo.cpp \
-    main.cpp
+	censuscorrelation.cpp \
+	stereo.cpp \
+	main.cpp \
+	harrismatcher.cpp
 
 HEADERS += \
-    util.h \
-    censusimage.h \
-    censuscorrelation.h \
-    stereo.h \
-    correlation.h \
-    matchingtable.h
+	util.h \
+	censusimage.h \
+	censuscorrelation.h \
+	stereo.h \
+	correlation.h \
+	matchingtable.h \
+	harrismatcher.h
+
+QMAKE_CXXFLAGS_RELEASE = -march=native \
+	-O3 -pipe -fomit-frame-pointer \
+	-mssse3 -msse2 \
+	-fopenmp
+
+QMAKE_LFLAGS_RELEASE = -fopenmp
