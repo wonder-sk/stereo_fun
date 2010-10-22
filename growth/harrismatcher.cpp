@@ -1,5 +1,6 @@
 #include "harrismatcher.h"
 #include "util.h"
+#include "now.h"
 
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
@@ -11,6 +12,7 @@ using namespace cv;
 HarrisMatcher::HarrisMatcher()
 {
 	saveImages= false;
+	lastTime= -1;
 
 	// Matching parameters
 	matchingYTolerance= 2;
@@ -30,11 +32,13 @@ HarrisMatcher::HarrisMatcher()
 
 QList<QVector3D> HarrisMatcher::getMatches()
 {
+	uint64_t start= Now::now();
+
 	// List of detected Harris points per scanline
 	QVector< QList<int> > listLeft;
 	QVector< QList<int> > listRight;
 
-	// Each is image is proccessed on a different thread for some quick&dirty speedup
+	// Each is image is proccessed on a different thread
 	#pragma omp parallel sections
 	{
 		#pragma omp section
@@ -81,6 +85,9 @@ QList<QVector3D> HarrisMatcher::getMatches()
 		// Get the matches for this line
 		matches << matchLine(y, listLeft[y], right);
 	}
+
+	// Store calculation time
+	lastTime= (Now::now()-start) / 1000;
 
 	if(saveImages)
 		matchedImage(matches).save("matches.png");
@@ -130,7 +137,7 @@ QList<QVector3D> HarrisMatcher::matchLine(int y, QList<int> leftXs, QList<QPoint
 		// Reject match if the disparity is negative and this is not allowed
 		reject |= !allowNegativeDisparity and leftPoint.x() < bestMatch.x();
 		// Reject match similarities with the borders (good for images with black borders)
-		reject |= !leftPoint.x() or !bestMatch.x() or !leftPoint.y();
+		//reject |= !leftPoint.x() or !bestMatch.x() or !leftPoint.y();
 
 		if(!reject)
 			matches << QVector3D(leftPoint.x(), bestMatch.x(), leftPoint.y());

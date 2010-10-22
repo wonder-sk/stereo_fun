@@ -23,7 +23,9 @@ HEADERS += \
 	stereo.h \
 	correlation.h \
 	matchingtable.h \
-	harrismatcher.h
+	harrismatcher.h \
+    now.h \
+    now.h
 
 QMAKE_CXXFLAGS_RELEASE = -march=native \
 	-O3 -pipe -fomit-frame-pointer \

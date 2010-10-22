@@ -14,17 +14,17 @@ class MatchingTable;
 class MatchingTable2;
 
 typedef struct Seed {
-    int x1,x2,y;
-    double c;
+	int x1,x2,y;
+	double c;
 
-    Seed(): x1(0), x2(0), y(0), c(-1) {}
-    Seed(int _x1, int _x2, int _y, Correlation* calc): x1(_x1), x2(_x2), y(_y)
-    {
-       c = calc->correlation(x1, x2, y);
-    }
+	Seed(): x1(0), x2(0), y(0), c(-1) {}
+	Seed(int _x1, int _x2, int _y, Correlation* calc): x1(_x1), x2(_x2), y(_y)
+	{
+	   c = calc->correlation(x1, x2, y);
+	}
 
-    bool operator<(const Seed& q) const { return c < q.c; }
-    bool operator>(const Seed& q) const { return c > q.c; }
+	bool operator<(const Seed& q) const { return c < q.c; }
+	bool operator>(const Seed& q) const { return c > q.c; }
 } Seed;
 
 typedef std::priority_queue<Seed> SeedQueue;
@@ -33,16 +33,19 @@ typedef std::priority_queue<Seed> SeedQueue;
 class StereoMatching
 {
 public:
-  StereoMatching(QString n_left, QString n_right, QString n_seeds, Correlation* c = NULL, double cThreshold = 0.6);
+  StereoMatching(QImage leftImage, QImage rightImage, QList<QVector3D> seeds, Correlation* c= NULL);
   ~StereoMatching();
 
   void setUsingProposedAlg(bool use) { mUseProposed = use; }
+  void loadSeedsFromFile(QString path);
 
   void run();
 
   void runInit();
   void runExit();
   bool hasFinished() { return mQueue.empty(); }
+
+  void step() { mUseProposed ? stepProposed() : stepBaseline(); }
   void stepBaseline();
   void stepProposed();
 
@@ -54,9 +57,12 @@ public:
   QImage disparityImage(bool with_background);
   QImage correlationImage();
 
-protected:
+  // Last calculation time in ms.
+  int getLastTime() { return lastTime; }
 
-  void loadSeeds();
+  Correlation* correlation() { return mC; }
+
+protected:
 
   Seed best_neighbor_2(const Seed& s, const int N_i[][3], int size);
   Seed best_neighbor(const Seed& s, int i);
@@ -64,7 +70,6 @@ protected:
   void proposed_matching_line(int y);
   void proposed_do_matching();
 
-  QString mNameLeft, mNameRight, mNameSeeds;
   QImage mImgL, mImgR;
   SeedQueue mQueue;
   QImage mImgD;
@@ -72,8 +77,6 @@ protected:
   int mNumSteps;
 
   Correlation* mC;
-
-  double mTreshold;
 
   bool mUseProposed;
 
@@ -83,6 +86,8 @@ protected:
   double mMargin;
   double* C_best_L;
   double* C_best_R;
+
+  int lastTime;
 };
 
 #endif // STEREO_H

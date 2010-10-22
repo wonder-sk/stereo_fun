@@ -12,6 +12,9 @@ public:
 
 	QList<QVector3D> getMatches();
 
+	// Last calculation time in ms
+	int getLastTime() { return lastTime; }
+
 	// Save debugging PNG's
 	bool saveImages;
 
@@ -42,6 +45,8 @@ private:
 	QVector<float> harrisLeft;
 	QVector<float> harrisRight;
 
+	int lastTime;
+
 	/// Aux operations
 
 	// Computes the harris (eigen) surface of an image
@@ -58,6 +63,7 @@ private:
 	QImage getHarrisImage(QVector<float> surface, QSize size);
 	QImage drawPoints(QImage image, QVector< QList<int> > points);
 	QImage matchedImage(QList<QVector3D> matches);
+
 };
 
 #endif // HARRISMATCHER_H
