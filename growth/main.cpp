@@ -28,13 +28,11 @@ public:
 		uint64_t start= Now::now();
 		stereo->runInit();
 
-		steps = 0;
 		while (!stereo->hasFinished())
 		{
-			steps++;
 			stereo->step();
 
-			if (steps % STEPS_AT_ONCE == 0) {
+			if (stereo->numSteps() % STEPS_AT_ONCE == 0) {
 				update();
 				qApp->processEvents();
 			}
@@ -42,7 +40,7 @@ public:
 		update();
 		stereo->runExit();
 
-		return (Now::now() - start) / 1000;
+		return Now::msElapsed(start);
 	}
 
 protected:
@@ -68,12 +66,11 @@ protected:
 		QFont f = p.font();
 		f.setPointSize(25);
 		p.setFont(f);
-		p.drawText(20,40, QString("STEPS %1 ... #CORR: %2").arg(steps)
+		p.drawText(20,40, QString("STEPS %1 ... #CORR: %2").arg(stereo->numSteps())
 				   .arg(stereo->correlation()->numCorrelations()));
 	}
 
 	StereoMatching* stereo;
-	int steps;
 };
 
 int main(int argc, char* argv[])
@@ -136,7 +133,7 @@ int main(int argc, char* argv[])
 
 	qDebug() << "Stereo matching using the" << QString(proposedAlg ? "Proposed" : "Baseline") << "algorithm...";
 	StereoMatching stereoMatcher(leftImage, rightImage, seeds, correlator);
-	stereoMatcher.loadSeedsFromFile("Rotunda_seeds.txt");
+	//stereoMatcher.loadSeedsFromFile("Rotunda_seeds.txt");
 	stereoMatcher.setUsingProposedAlg(proposedAlg);
 
 	int elapsedTime;

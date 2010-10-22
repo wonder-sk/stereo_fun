@@ -87,7 +87,7 @@ QList<QVector3D> HarrisMatcher::getMatches()
 	}
 
 	// Store calculation time
-	lastTime= (Now::now()-start) / 1000;
+	lastTime= Now::msElapsed(start);
 
 	if(saveImages)
 		matchedImage(matches).save("matches.png");

@@ -17,6 +17,12 @@ namespace Now
 	  /* return double value of unix time */
 	  return (tv.tv_sec * 1000000) + tv.tv_usec;
 	}
+
+	inline
+	uint32_t msElapsed(uint64_t start)
+	{
+		return (now() - start) / 1000;
+	}
 }
 
 #endif // NOW_H

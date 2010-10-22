@@ -73,7 +73,7 @@ protected:
   QImage mImgL, mImgR;
   SeedQueue mQueue;
   QImage mImgD;
-  //QImage mImgC;
+
   int mNumSteps;
 
   Correlation* mC;

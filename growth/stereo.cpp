@@ -66,15 +66,12 @@ void StereoMatching::run()
   // growth
   mNumSteps = 0;
   while (!mQueue.empty())
-  {
-	mNumSteps++;
 	step();
-  }
 
   // finalization and matching (only proposed)
   runExit();
 
-  lastTime= (Now::now() - start) / 1000;
+  lastTime= Now::msElapsed(start);
 }
 
 double* _init_C_array(QImage& img)
@@ -125,6 +122,8 @@ void StereoMatching::runExit()
 
 void StereoMatching::stepBaseline()
 {
+	mNumSteps++;
+
 	Seed s = mQueue.top();
 	//qDebug("[%d] seed: %d %d %d -- d %d -- %f", queue.size(), s.x1, s.x2, s.y, s.x2-s.x1, s.c);
 	mQueue.pop();
@@ -150,6 +149,8 @@ void StereoMatching::stepBaseline()
 
 void StereoMatching::stepProposed()
 {
+  mNumSteps++;
+
   Seed s = mQueue.top();
   //qDebug("[%d] seed: %d %d %d -- d %d -- %f", queue.size(), s.x1, s.x2, s.y, s.x2-s.x1, s.c);
   mQueue.pop();

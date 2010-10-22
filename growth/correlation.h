@@ -42,7 +42,7 @@ public:
 	IMG_l = qimage2img(imgL, win_size);
 	IMG_r = qimage2img(imgR, win_size);
 
-	return (Now::now()-start)/1000;
+	return Now::msElapsed(start);
   }
 
   virtual double correlation(int x_l, int x_r, int y)
@@ -160,7 +160,7 @@ public:
   {
 	uint64_t start= Now::now();
 	cc.transform(imgL, imgR);
-	return (Now::now()-start) / 1000;
+	return Now::msElapsed(start);
   }
 
   virtual double correlation(int x_l, int x_r, int y)
