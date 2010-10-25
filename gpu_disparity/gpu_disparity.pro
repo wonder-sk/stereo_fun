@@ -1,4 +1,4 @@
-TEMPLATE = app
+TEMPLATE = app	
 CONFIG += qt release warn_on
 
 HEADERS = \
@@ -6,21 +6,26 @@ HEADERS = \
 	src/cuda_util.h \
 	src/disparity.h \
 	src/disparity_kernels.h \
+	src/disparity2_kernels.h \
+	src/util_kernels.h \
+	src/census_kernels.cu
 
 SOURCES = \
 	src/cuda_util_cpu.cpp \
 	src/main.cpp \
-	src/disparity.cpp \
+	src/disparity.cpp
 
 CUDA_SOURCES = \
 	src/cuda_util.cu \
 	src/disparity_kernels.cu \
-	src/disparity_util.cu \
+	src/disparity2_kernels.cu \
+	src/util_kernels.cu \
+	src/census_kernels.cu
 
 QMAKE_CXXFLAGS_RELEASE = -march=native -O3 -pipe -fomit-frame-pointer
 CUDA_ARCH= sm_11
 
-DESTDIR = bin
+#DESTDIR = bin
 MOC_DIR = obj
 OBJECTS_DIR = obj
 RCC_DIR = obj
@@ -43,7 +48,7 @@ cuda.dependcy_type = TYPE_C
 cuda.depend_command = nvcc -M -arch $$CUDA_ARCH -Xcompiler $$join(QMAKE_CXXFLAGS,",") $$join(INCLUDEPAT,'" -I "','-I "','"') ${QMAKE_FILE_NAME} \
 	| sed "s,^.*: ,," | sed "s,^ *,,"  | tr -d '\\\n'
 cuda.input = CUDA_SOURCES
-QMAKE_EXTRA_UNIX_COMPILERS += cuda
+QMAKE_EXTRA_COMPILERS += cuda
 OTHER_FILES += src/gpupipeline/output_kernels.cu \
     src/gpupipeline/multibandblend_kernels.cu \
     src/gpupipeline/input_kernels.cu \

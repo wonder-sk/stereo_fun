@@ -9,6 +9,7 @@ public:
 	Disparity(QImage leftImage, QImage rightImage);
 	~Disparity();
 
+	void transform();
 	void calculate();
 	QImage getDisparity();
 
@@ -16,11 +17,22 @@ public:
 	
 private:
 	QSize size;
+	int colorBytes;
+	int bytes;
+	
 	QImage leftImage;
-	QImage rightImage;
+	void* leftColor;
 	void* left;
-	void* right;
+	void* leftCensus5;
+	void* leftCensus7;
 
+	QImage rightImage;	
+	void* rightColor;
+	void* right;
+	void* rightCensus5;
+	void* rightCensus7;
+
+	void* disparityColor;
 	void* disparity;
 
 	// Last execution time in ms

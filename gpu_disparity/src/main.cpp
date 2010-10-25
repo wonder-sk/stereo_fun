@@ -21,8 +21,10 @@ int main(int argc, char* argv[])
 	qDebug() << "Initializing";
 	Disparity disparity(left, right);
 
-	qDebug() << "Calculating disparity map";
+	qDebug() << "Transforming images";
+	disparity.transform();
 	
+	qDebug() << "Calculating disparity map";
 	disparity.calculate();
 	qDebug() << "Done. Time:" << disparity.getLastTime() << "msecs.";
 	
